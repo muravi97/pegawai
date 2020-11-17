@@ -5,37 +5,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<PEGAWAI>> fetchPEGAWAIs(http.Client client) async {
+Future<List<pegawai>> fetchMhss(http.Client client) async {
   final response =
-      await client.get('https://testflutterku.000webhostapp.com/readDatajsonMID.php');
+      await client.get('https://ekifluter.000webhostapp.com/readDatajsonMid.php');
 
-  // Use the compute function to run parsePEGAWAIs in a separate isolate.
-  return compute(parsePEGAWAIs, response.body);
+  // Use the compute function to run parseMhss in a separate isolate.
+  return compute(parseMhss, response.body);
 }
 
-// A function that converts a response body into a List<PEGAWAI>.
-List<PEGAWAI> parsePEGAWAIs(String responseBody) {
+// A function that converts a response body into a List<Mhs>.
+List<pegawai> parseMhss(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<PEGAWAI>((json) => PEGAWAI.fromJson(json)).toList();
+  return parsed.map<pegawai>((json) => pegawai.fromJson(json)).toList();
 }
 
-class PEGAWAI {
+class pegawai {
   final String nip;
   final String nama_pegawai;
   final String departemen;
   final String jabatan;
   final String pendidikan_terakhir;
 
-  PEGAWAI({this.nip, this.nama_pegawai, this.departemen, this.jabatan, this.pendidikan_terakhir});
+  pegawai({this.nip, this.nama_pegawai, this.departemen, this.jabatan, this.pendidikan_terakhir});
 
-  factory PEGAWAI.fromJson(Map<String, dynamic> json) {
-    return PEGAWAI(
+  factory pegawai.fromJson(Map<String, dynamic> json) {
+    return pegawai(
       nip: json['nip'] as String,
       nama_pegawai: json['nama_pegawai'] as String,
       departemen: json['departemen'] as String,
       jabatan: json['jabatan'] as String,
-      pendidikan_terakhir: json['pendidikan_terakhir'] as String,
+     pendidikan_terakhir: json['pendidikan_terakhir'] as String,
     );
   }
 }
@@ -65,13 +65,13 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: FutureBuilder<List<PEGAWAI>>(
-        future: fetchPEGAWAIs(http.Client()),
+      body: FutureBuilder<List<pegawai>>(
+        future: fetchMhss(http.Client()),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
 
           return snapshot.hasData
-              ? PEGAWAIsList(PEGAWAIData: snapshot.data)
+              ? MhssList(pegawaiData: snapshot.data)
               : Center(child: CircularProgressIndicator());
         },
       ),
@@ -79,10 +79,10 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class PEGAWAIsList extends StatelessWidget {
-  final List<PEGAWAI> PEGAWAIData;
+class MhssList extends StatelessWidget {
+  final List<pegawai> pegawaiData;
 
-  PEGAWAIsList({Key key, this.PEGAWAIData}) : super(key: key);
+  MhssList({Key key, this.pegawaiData}) : super(key: key);
 
 
 
@@ -146,9 +146,9 @@ return Container(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
-      itemCount: PEGAWAIData.length,
+      itemCount: pegawaiData.length,
       itemBuilder: (context, index) {
-        return viewData(PEGAWAIData,index);
+        return viewData(pegawaiData,index);
       },
     );
   }
