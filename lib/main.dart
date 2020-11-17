@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 Future<List<PEGAWAI>> fetchPEGAWAIs(http.Client client) async {
   final response =
-      await client.get('https://testflutterku.000webhostapp.com/readDatajson.php');
+      await client.get('https://testflutterku.000webhostapp.com/readDatajsonMID.php');
 
   // Use the compute function to run parsePEGAWAIs in a separate isolate.
   return compute(parsePEGAWAIs, response.body);
