@@ -5,37 +5,37 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<Mhs>> fetchMhss(http.Client client) async {
+Future<List<PEGAWAI>> fetchPEGAWAIs(http.Client client) async {
   final response =
       await client.get('https://testflutterku.000webhostapp.com/readDatajson.php');
 
-  // Use the compute function to run parseMhss in a separate isolate.
-  return compute(parseMhss, response.body);
+  // Use the compute function to run parsePEGAWAIs in a separate isolate.
+  return compute(parsePEGAWAIs, response.body);
 }
 
-// A function that converts a response body into a List<Mhs>.
-List<Mhs> parseMhss(String responseBody) {
+// A function that converts a response body into a List<PEGAWAI>.
+List<PEGAWAI> parsePEGAWAIs(String responseBody) {
   final parsed = jsonDecode(responseBody).cast<Map<String, dynamic>>();
 
-  return parsed.map<Mhs>((json) => Mhs.fromJson(json)).toList();
+  return parsed.map<PEGAWAI>((json) => PEGAWAI.fromJson(json)).toList();
 }
 
-class Mhs {
-  final String nim;
-  final String nama;
-  final String kelas;
-  final String kdmatkul;
-  final String email;
+class PEGAWAI {
+  final String nip;
+  final String nama_pegawai;
+  final String departemen;
+  final String jabatan;
+  final String pendidikan_terakhir;
 
-  Mhs({this.nim, this.nama, this.kelas, this.kdmatkul, this.email});
+  PEGAWAI({this.nip, this.nama_pegawai, this.departemen, this.jabatan, this.pendidikan_terakhir});
 
-  factory Mhs.fromJson(Map<String, dynamic> json) {
-    return Mhs(
-      nim: json['nim'] as String,
-      nama: json['nama'] as String,
-      kelas: json['kelas'] as String,
-      kdmatkul: json['kdmatkul'] as String,
-      email: json['email'] as String,
+  factory PEGAWAI.fromJson(Map<String, dynamic> json) {
+    return PEGAWAI(
+      nip: json['nip'] as String,
+      nama_pegawai: json['nama_pegawai'] as String,
+      departemen: json['departemen'] as String,
+      jabatan: json['jabatan'] as String,
+      pendidikan_terakhir: json['pendidikan_terakhir'] as String,
     );
   }
 }
@@ -45,7 +45,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final appTitle = 'Data Mahasiswa';
+    final appTitle = 'Data Pegawai';
 
     return MaterialApp(
       title: appTitle,
@@ -65,13 +65,13 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text(title),
       ),
-      body: FutureBuilder<List<Mhs>>(
-        future: fetchMhss(http.Client()),
+      body: FutureBuilder<List<PEGAWAI>>(
+        future: fetchPEGAWAIs(http.Client()),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
 
           return snapshot.hasData
-              ? MhssList(MhsData: snapshot.data)
+              ? PEGAWAIsList(PEGAWAIData: snapshot.data)
               : Center(child: CircularProgressIndicator());
         },
       ),
@@ -79,10 +79,10 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
-class MhssList extends StatelessWidget {
-  final List<Mhs> MhsData;
+class PEGAWAIsList extends StatelessWidget {
+  final List<PEGAWAI> PEGAWAIData;
 
-  MhssList({Key key, this.MhsData}) : super(key: key);
+  PEGAWAIsList({Key key, this.PEGAWAIData}) : super(key: key);
 
 
 
@@ -117,8 +117,8 @@ return Container(
            //leading: Image.network(
              //   "https://elearning.binadarma.ac.id/pluginfile.php/1/theme_lambda/logo/1602057627/ubd_logo.png",
              // ),
-            title: Text(data[index].nim, style: TextStyle(color: Colors.white)),
-            subtitle: Text(data[index].nama, style: TextStyle(color: Colors.white)),
+            title: Text(data[index].nip, style: TextStyle(color: Colors.white)),
+            subtitle: Text(data[index].nama_pegawai, style: TextStyle(color: Colors.white)),
           ),
           ButtonTheme.bar(
             child: ButtonBar(
@@ -146,9 +146,9 @@ return Container(
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
       ),
-      itemCount: MhsData.length,
+      itemCount: PEGAWAIData.length,
       itemBuilder: (context, index) {
-        return viewData(MhsData,index);
+        return viewData(PEGAWAIData,index);
       },
     );
   }
