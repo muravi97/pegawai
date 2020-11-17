@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 
 Future<List<pegawai>> fetchMhss(http.Client client) async {
   final response =
-      await client.get('https://flutterraka.000webhostapp.com/readDatajsonMid.php');
+      await client.get('https://flutterraka.000webhostapp.com/readDatajsonMID.php');
 
   // Use the compute function to run parseMhss in a separate isolate.
   return compute(parseMhss, response.body);
